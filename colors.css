@@ -1,0 +1,39 @@
+.green{
+    background-color: rgb(10, 189, 10);
+}
+.red{
+    background-color: rgb(204, 21, 21);
+}
+.grey{
+    background-color: grey;
+}
+.blue{
+    background-color: rgb(109, 166, 245);
+}
+.yellow{
+    background-color: rgb(232, 236, 32);
+}
+.babyblue{
+    background-color: aqua;
+}
+.brightgrey{
+    background-color: grey;
+}
+.brightgreen{
+    background-color: greenyellow;
+}
+.purple{
+    background-color: blueviolet;
+}
+.darkwhite{
+    background-color: white;
+}
+.brown{
+    background-color: rgb(125, 83, 0);
+}
+.pink{
+    background-color: pink;
+}
+.normal{
+    background-color: rgb(234, 172, 29);
+}
