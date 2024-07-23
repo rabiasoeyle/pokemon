@@ -221,8 +221,7 @@ function closePokemonCard(){
 }
 
 async function loadMainPokemonData(){
-    let search = document.getElementById('search').value;
-    
+
     let response = await fetch(startUrl);
     let responseToJson = await response.json();
     console.log("MainArray:" + Object.keys(responseToJson))
