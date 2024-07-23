@@ -50,7 +50,7 @@ async function loadMoreButton(pokemons){
 async function renderMorePokemons(pokemons){
     let content = document.getElementById('content');
     console.log("MainArray in RMP:" + Object.keys(pokemons))
-    amount = amount + 20;
+    amount = amount + 10;
     for(let i=startAmount; i<amount; i++){
         let pokemon = await loadPokemon(i+1);
         let name = capitalizeFirstLetter(pokemons['results'][i]['name']);//for Capital letter
@@ -58,7 +58,7 @@ async function renderMorePokemons(pokemons){
         colorOfCard(pokemon, i); 
     }
     addEventListeners(pokemons, startAmount, amount);
-    startAmount += 20;
+    startAmount += 10;
     console.log("Length:" + amount);
     console.log("start:" + startAmount);
 }
@@ -70,7 +70,7 @@ function addEventListeners(pokemons, start, end) {
         if (card) {
             card.addEventListener("click", () => {
                 console.log(`Pokemon ${i} clicked`);
-                openPokemoncard(pokemons, i);
+                openPokemoncard(i, pokemons);
             });
         }}
 }
@@ -137,7 +137,8 @@ function renderStartPageHTML(name, i, pokemon){
 
 
 //opens one detailed Infocard of a pokemon which was clicked on
-async function openPokemoncard(pokemons, i){
+async function openPokemoncard(i){
+    let pokemons = await loadMainPokemonData();  
     let popup = document.getElementById('cardBackground');
     popup.classList.remove('d-none');
     popup.classList.add('d-flex');
@@ -155,21 +156,35 @@ async function openPokemoncard(pokemons, i){
         <div class="infoCardLinks" id="infoCardLinks"> <b onclick="loadAbouts(${i})" id="about ">About</b>  <b onclick="loadBasestate(${i})">Basestate</b></div>
         <div id="infoContent" class="infoContent">
         </div>
+        <div class="swipeButtons"><button id="cardBeforeButton"onclick="openCardBefore(${i})"><</button> <button onclick="openCardAfter(${i})">></button></div>
     </div>
-    <div><button onclick="openCardBefore(${pokemons, i})"><</button> <button onclick="openCardAfter(${pokemons, i})">></button></div>`
+    `
     loadAbouts(i);
-    if (loadAbouts==active){
-        let about = document.getElementById('about');
-
-    }
    
 }  
 
 
-function openCardBefore(pokemons, i){
-    i--;
-    openPokemoncard(pokemons, i);
+async function openCardBefore(i){
+    let pokemons = await loadMainPokemonData();  
+    console.log("MainArray:" + Object.keys(pokemons['results']))
+    i = i-1;
+    if(i<0){
+        i = pokemons['results'].length - 1;
+    }
+    openPokemoncard(i);
 }
+
+
+async function openCardAfter(i){
+    let pokemons = await loadMainPokemonData();  
+    console.log("MainArray:" + Object.keys(pokemons['results']))
+    i = i+1;
+    if(i > pokemons['results'].length-1){
+        i = 0;
+    }
+    openPokemoncard(i);
+}
+
 
 async function loadAbouts(i){
     let content = document.getElementById('infoContent');
