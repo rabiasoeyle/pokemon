@@ -1,6 +1,13 @@
 let startUrl = "https://pokeapi.co/api/v2/pokemon?limit=1000&offset=0";
 let typeUrl = "https://pokeapi.co/api/v2/pokemon/";
-let amount = 20;
+let amount = 0;
+let startAmount = 0;
+
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    init();
+});
+
 
 function init(){
     renderStartPage();
@@ -9,21 +16,28 @@ function init(){
 
 async function renderStartPage(){
     let content = document.getElementById('content');
-    let pokemons = await loadMainPokemonData("results");  
+    let main = document.getElementById('main');
+    let pokemons = await loadMainPokemonData();  
+    console.log("MainArray in RSP:" + Object.keys(pokemons))
     content.innerHTML ='';
-    await renderMorePokemons( pokemons);
-    content.innerHTML+= `<button class="loadMoreButton" onclick="renderMorePokemons(pokemons)">Load More</button>`
+    await renderMorePokemons(pokemons);
+    main.innerHTML+= `<button class="loadMoreButton" onclick="renderMorePokemons(${pokemons})">Load More</button>`
 }
 
 
 async function renderMorePokemons(pokemons){
+    let content = document.getElementById('content');
+    console.log("MainArray in RMP:" + Object.keys(pokemons))
     amount = amount + 20;
-    for(i=0; i<amount; i ++){
-        let pokemon = await loadPokemon(i+1)
+    for(let i=startAmount; i<amount; i++){
+        let pokemon = await loadPokemon(i+1);
         content.innerHTML += renderStartPageHTML(pokemons, i, pokemon);
-        // document.getElementById(`pokemon-${i}`).addEventListener("click", openPokemoncard);
         colorOfCard(pokemon, i);
+        document.getElementById(`pokemon-${i}`).addEventListener("click", openPokemoncard);
     }
+    startAmount = startAmount+20;
+    console.log(amount);
+    console.log(startAmount);
 }
 
 
@@ -77,11 +91,11 @@ function colorOfCard(pokemon, i){
 
 function renderStartPageHTML(pokemons, i, pokemon){
     return `
-    <div  class="pokemonCards" id="pokemon-${i}"  onclick="openPokemoncard(pokemons, i, pokemon)">
+    <div class="pokemonCards" id="pokemon-${i}">
         <h2 class="pokemonName">${pokemons['results'][i]['name']}</h2>
         <div class="typeAndImg">
            <div>${pokemonType(pokemon)} </div>
-           <img class="showAllPokemonImage"src="${pokemon['sprites']['other']['official-artwork']['front_default']}">
+           <img class="showAllPokemonImage" src="${pokemon['sprites']['other']['official-artwork']['front_default']}">
         </div>
     </div>`
 } 
@@ -105,27 +119,27 @@ function closePokemonCard(){
     popup.classList.add('d-none');
 }
 
-async function loadMainPokemonData(path=""){
-    let response = await fetch(startUrl + path +".json");
+async function loadMainPokemonData(){
+    let response = await fetch(startUrl);
     let responseToJson = await response.json();
-    console.log('MainArray: '+ responseToJson);
-    console.log(Object.keys(responseToJson))
+    console.log("MainArray:" + Object.keys(responseToJson))
     return responseToJson;
 }
 
 
-async function loadPokemon(path=""){
+async function loadPokemon(path){
     let response = await fetch(typeUrl + path);
-    let responseToJson = await response.json();
+    let responseToJson =  response.json();
     console.log('PokemonArray: '+ responseToJson);
     return responseToJson;
 }
 
 function pokemonType(pokemon){
     let result='';
-    for(i=0; i<pokemon['types'].length; i++){
+    for(let i=0; i<pokemon['types'].length; i++){
         result += pokemon['types'][i]['type']['name']
         result += ` `;
     }
     return  result;
 }
+
