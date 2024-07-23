@@ -16,12 +16,23 @@ function init(){
 
 async function renderStartPage(){
     let content = document.getElementById('content');
-    let main = document.getElementById('main');
+    // let main = document.getElementById('main');
     let pokemons = await loadMainPokemonData();  
     console.log("MainArray in RSP:" + Object.keys(pokemons))
     content.innerHTML ='';
     await renderMorePokemons(pokemons);
-    main.innerHTML+= `<button class="loadMoreButton" onclick="renderMorePokemons(${pokemons})">Load More</button>`
+    await loadMoreButton(pokemons);
+}
+
+
+async function loadMoreButton(pokemons){
+    let main = document.getElementById('main');
+    let loadMoreButton = document.createElement('button');
+    loadMoreButton.id = 'loadMoreButton';
+    loadMoreButton.classList.add('loadMoreButton');
+    loadMoreButton.innerText = 'Load More';
+    loadMoreButton.addEventListener('click', () => renderMorePokemons(pokemons));
+    main.appendChild(loadMoreButton);
 }
 
 
@@ -32,8 +43,8 @@ async function renderMorePokemons(pokemons){
     for(let i=startAmount; i<amount; i++){
         let pokemon = await loadPokemon(i+1);
         content.innerHTML += renderStartPageHTML(pokemons, i, pokemon);
+        document.getElementById(`pokemon-${i}`).addEventListener("click", () => openPokemoncard(pokemons, i, pokemon));
         colorOfCard(pokemon, i);
-        document.getElementById(`pokemon-${i}`).addEventListener("click", openPokemoncard);
     }
     startAmount = startAmount+20;
     console.log(amount);
@@ -100,16 +111,17 @@ function renderStartPageHTML(pokemons, i, pokemon){
     </div>`
 } 
 
-
+//opens one detailed Infocard of a pokemon which was clicked on
 function openPokemoncard(pokemons, i, pokemon){
     let popup = document.getElementById('pokemonInfoCardBackground');
     popup.classList.remove('d-none');
+    popup.classList.add('d-flex');
     let pokemonInfo = document.getElementById('pokemonInfoCard');
     pokemonInfo.innerHTML = `
     <h2>${pokemons['results'][i]['name']}</h2>
     <div>
         <div>Info: </div>
-        <img src="${pokemon['sprites']['other']['official-artwork']['front_default']}>
+        <img src="${pokemon['sprites']['other']['official-artwork']['front_default']}">
     </div>`
 }
 

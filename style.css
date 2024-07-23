@@ -72,7 +72,6 @@ footer{
     right:0;
     z-index: 2;
     background-color: rgb(70, 70, 67, 0.2);
-    display: flex;
     align-items: center;
     justify-content: center;
 }
@@ -88,6 +87,9 @@ footer{
 }
 .d-none{
     display:none;
+}
+.d-flex{
+    display:flex;
 }
 
 @media(max-width:700px){
