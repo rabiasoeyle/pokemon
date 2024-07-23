@@ -6,8 +6,19 @@ let startAmount = 0;
 
 document.addEventListener('DOMContentLoaded', (event) => {
     init();
-});
 
+    // Event Listener zum Schließen des Popups, wenn außerhalb des pokemonInfoCard geklickt wird
+document.getElementById('cardBackground').addEventListener('click', (event) => {
+        if (!document.getElementById('pokemonInfoCard').contains(event.target)) {
+            closePokemonCard();
+        }
+    });
+
+    // Event Listener zum Verhindern des Schließens, wenn innerhalb des pokemonInfoCard geklickt wird
+document.getElementById('pokemonInfoCard').addEventListener('click', (event) => {
+        event.stopPropagation(); // Verhindert das Weiterleiten des Click-Events
+    });
+});
 
 function init(){
     renderStartPage();
@@ -42,13 +53,26 @@ async function renderMorePokemons(pokemons){
     amount = amount + 20;
     for(let i=startAmount; i<amount; i++){
         let pokemon = await loadPokemon(i+1);
-        content.innerHTML += renderStartPageHTML(pokemons, i, pokemon);
-        document.getElementById(`pokemon-${i}`).addEventListener("click", () => openPokemoncard(pokemons, i, pokemon));
-        colorOfCard(pokemon, i);
+        let name = capitalizeFirstLetter(pokemons['results'][i]['name']);//for Capital letter
+        content.innerHTML += renderStartPageHTML(name, i, pokemon);
+        colorOfCard(pokemon, i); 
     }
-    startAmount = startAmount+20;
-    console.log(amount);
-    console.log(startAmount);
+    addEventListeners(pokemons, startAmount, amount);
+    startAmount += 20;
+    console.log("Length:" + amount);
+    console.log("start:" + startAmount);
+}
+
+//add an event listener to every card
+function addEventListeners(pokemons, start, end) {
+    for (let i = start; i < end; i++) {
+        let card = document.getElementById(`pokemon-${i}`);
+        if (card) {
+            card.addEventListener("click", () => {
+                console.log(`Pokemon ${i} clicked`);
+                openPokemoncard(pokemons, i);
+            });
+        }}
 }
 
 
@@ -100,10 +124,10 @@ function colorOfCard(pokemon, i){
 }
 
 
-function renderStartPageHTML(pokemons, i, pokemon){
+function renderStartPageHTML(name, i, pokemon){
     return `
     <div class="pokemonCards" id="pokemon-${i}">
-        <h2 class="pokemonName">${pokemons['results'][i]['name']}</h2>
+        <h2 class="pokemonName">${name}</h2>
         <div class="typeAndImg">
            <div>${pokemonType(pokemon)} </div>
            <img class="showAllPokemonImage" src="${pokemon['sprites']['other']['official-artwork']['front_default']}">
@@ -111,24 +135,74 @@ function renderStartPageHTML(pokemons, i, pokemon){
     </div>`
 } 
 
+
 //opens one detailed Infocard of a pokemon which was clicked on
-function openPokemoncard(pokemons, i, pokemon){
-    let popup = document.getElementById('pokemonInfoCardBackground');
+async function openPokemoncard(pokemons, i){
+    let popup = document.getElementById('cardBackground');
     popup.classList.remove('d-none');
     popup.classList.add('d-flex');
+    let pokemon = await loadPokemon(i+1);
     let pokemonInfo = document.getElementById('pokemonInfoCard');
+    pokemonInfo.innerHTML ='';
+    let name = pokemons['results'][i]['name']
+    name = capitalizeFirstLetter(name);
     pokemonInfo.innerHTML = `
-    <h2>${pokemons['results'][i]['name']}</h2>
     <div>
-        <div>Info: </div>
-        <img src="${pokemon['sprites']['other']['official-artwork']['front_default']}">
-    </div>`
+        <h2 class="infoCardName">${name}</h2>
+        <img class="infoCardImg" src="${pokemon['sprites']['other']['official-artwork']['front_default']}">
+    </div>
+    <div class="infoCardText" id="pokemonInfo">
+        <div class="infoCardLinks" id="infoCardLinks"> <b onclick="loadAbouts(${i})" id="about ">About</b>  <b onclick="loadBasestate(${i})">Basestate</b></div>
+        <div id="infoContent" class="infoContent">
+        </div>
+    </div>
+    <div><button onclick="openCardBefore(${pokemons, i})"><</button> <button onclick="openCardAfter(${pokemons, i})">></button></div>`
+    loadAbouts(i);
+    if (loadAbouts==active){
+        let about = document.getElementById('about');
+
+    }
+   
+}  
+
+
+function openCardBefore(pokemons, i){
+    i--;
+    openPokemoncard(pokemons, i);
+}
+
+async function loadAbouts(i){
+    let content = document.getElementById('infoContent');
+    content.innerHTML='';
+    let pokemon = await loadPokemon(i+1);
+    content.innerHTML= `
+    <span><b>Type:</b>${pokemonType(pokemon)}</span>
+    <span><b>Base-Experience:</b> ${pokemon['base_experience']}</span>
+    <span><b>Height:</b> ${pokemon['height']}</span>
+    <span> <b>Order:</b> ${pokemon['order']}</span>
+    <span><b>Weight:</b> ${pokemon['weight']}</span>
+    `
+}
+
+
+async function loadBasestate(i){
+    let content = document.getElementById('infoContent');
+    content.innerHTML='';
+    let pokemon = await loadPokemon(i+1);
+    content.innerHTML= pokemonStats(pokemon)
+
+}
+
+//for capitalising the first letter
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1)
 }
 
 
 function closePokemonCard(){
-    let popup = document.getElementById('pokemonInfoCardBackground');
+    let popup = document.getElementById('cardBackground');
     popup.classList.add('d-none');
+    popup.classList.remove('d-flex');
 }
 
 async function loadMainPokemonData(){
@@ -155,3 +229,13 @@ function pokemonType(pokemon){
     return  result;
 }
 
+
+function pokemonStats(pokemon){
+    let result ='';
+    for(let i=0; i<pokemon['stats'].length; i++){
+        let statName = pokemon['stats'][i]['stat']['name'];
+        statName = capitalizeFirstLetter(statName);
+        result += `<span><b>${statName}:</b> <b>${pokemon['stats'][i]['base_stat']}</b> <b></b></span>`
+    }
+    return result;
+}

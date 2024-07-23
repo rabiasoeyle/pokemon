@@ -65,7 +65,7 @@ footer{
     margin:16px;
 }
 .pokemonInfoCardBackground{
-    position: absolute;
+    position: fixed;
     top:0;
     bottom:0;
     left:0;
@@ -78,12 +78,31 @@ footer{
 .pokemonInfoCard{
     width:50vw;
     height:70vh;
-    background-color: blue;
+    background-image: url("./img/background.png") ;
+    background-size: cover;
     display:flex;
-    justify-content: center;
+    justify-content: space-between;
+    flex-direction: column;
     padding:16px;
     border-radius: 24px;
     z-index:3;
+}
+.infoContent{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top:16px;
+}
+.infoCardText{
+    height: 45%;
+    text-align: left;
+}
+.infoCardLinks b:hover{
+    cursor: pointer;
+    text-decoration: underline;
+}
+.infoCardImg{
+    width:100%;
 }
 .d-none{
     display:none;
