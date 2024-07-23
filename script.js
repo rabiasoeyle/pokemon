@@ -57,7 +57,7 @@ async function renderMorePokemons(pokemons){
         content.innerHTML += renderStartPageHTML(name, i, pokemon);
         colorOfCard(pokemon, i); 
     }
-    addEventListeners(pokemons, startAmount, amount);
+    addEventListeners(pokemons, 0, amount);
     startAmount += 10;
     console.log("Length:" + amount);
     console.log("start:" + startAmount);
@@ -148,15 +148,16 @@ async function openPokemoncard(i){
     let name = pokemons['results'][i]['name']
     name = capitalizeFirstLetter(name);
     pokemonInfo.innerHTML = `
-    <div>
+    <div class="infoCardTop">
         <h2 class="infoCardName">${name}</h2>
         <img class="infoCardImg" src="${pokemon['sprites']['other']['official-artwork']['front_default']}">
     </div>
-    <div class="infoCardText" id="pokemonInfo">
-        <div class="infoCardLinks" id="infoCardLinks"> <b onclick="loadAbouts(${i})" id="about ">About</b>  <b onclick="loadBasestate(${i})">Basestate</b></div>
-        <div id="infoContent" class="infoContent">
+    <div class="infoCardBottom" id="pokemonInfo">
+        <div class="infoCardText">
+            <div class="infoCardLinks" id="infoCardLinks"> <b onclick="loadAbouts(${i})" id="about ">About</b>  <b onclick="loadBasestate(${i})">Basestate</b></div>
+            <div id="infoContent" class="infoContent"></div>
         </div>
-        <div class="swipeButtons"><button id="cardBeforeButton"onclick="openCardBefore(${i})"><</button> <button onclick="openCardAfter(${i})">></button></div>
+        <div class="swipeButtons"><button id="cardBeforeButton"onclick="openCardBefore(${i})"><b><</b></button> <button onclick="openCardAfter(${i})"><b>></b></button></div>
     </div>
     `
     loadAbouts(i);
@@ -191,11 +192,11 @@ async function loadAbouts(i){
     content.innerHTML='';
     let pokemon = await loadPokemon(i+1);
     content.innerHTML= `
-    <span><b>Type:</b>${pokemonType(pokemon)}</span>
-    <span><b>Base-Experience:</b> ${pokemon['base_experience']}</span>
-    <span><b>Height:</b> ${pokemon['height']}</span>
-    <span> <b>Order:</b> ${pokemon['order']}</span>
-    <span><b>Weight:</b> ${pokemon['weight']}</span>
+    <span class="loadInfoSpan"><b>Type:</b><span>${pokemonType(pokemon)}</span></span>
+    <span class="loadInfoSpan"><b>Height:</b><span> ${pokemon['height']}</span></span>
+    <span class="loadInfoSpan"><b>Order:</b> <span>${pokemon['order']}</span></span>
+    <span class="loadInfoSpan"><b>Weight:</b> <span>${pokemon['weight']}</span></span> 
+    <span class="loadInfoSpan"><b>Base-Experience:</b> <span>${pokemon['base_experience']}</span></span>
     `
 }
 
@@ -205,7 +206,6 @@ async function loadBasestate(i){
     content.innerHTML='';
     let pokemon = await loadPokemon(i+1);
     content.innerHTML= pokemonStats(pokemon)
-
 }
 
 //for capitalising the first letter
@@ -221,6 +221,8 @@ function closePokemonCard(){
 }
 
 async function loadMainPokemonData(){
+    let search = document.getElementById('search').value;
+    
     let response = await fetch(startUrl);
     let responseToJson = await response.json();
     console.log("MainArray:" + Object.keys(responseToJson))
@@ -250,7 +252,14 @@ function pokemonStats(pokemon){
     for(let i=0; i<pokemon['stats'].length; i++){
         let statName = pokemon['stats'][i]['stat']['name'];
         statName = capitalizeFirstLetter(statName);
-        result += `<span><b>${statName}:</b> <b>${pokemon['stats'][i]['base_stat']}</b> <b></b></span>`
+        let baseStat = pokemon['stats'][i]['base_stat'];
+        result += `
+        <span class="statSpan">
+            <b>${statName}:</b> 
+            <div class="statNumberAndShowLine"><b>${pokemon['stats'][i]['base_stat']}</b>
+                <div class="fullWidth"> <span id="showPercent${i}"class="showPercent" style="width: ${baseStat}%;"></span></div>
+            </div>
+        </span>`
     }
     return result;
 }

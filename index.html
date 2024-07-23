@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pokedex</title>
     <script src="script.js"></script>
-    <link rel="icon" type="image/vnd.icon" href="./img/pokeball.png">
+    <link rel="icon" type="image/vnd.icon" href="./img/favicon.png">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="colors.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -18,14 +18,14 @@
     <header class="header">
         <h1>Pokedex</h1>
         <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="searchField">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
     </header>
     <section class="main" id="main">
         <div class="content"id="content"></div>
-        <div class="pokemonInfoCardBackground d-none" id="cardBackground" onclick="closePokemonCard()">
-            <div class="pokemonInfoCard" id="pokemonInfoCard"></div>>
+        <div class="pokemonInfoCardBackground d-none" id="cardBackground">
+            <div class="pokemonInfoCard" id="pokemonInfoCard"></div>
         </div>
     </section>
     <footer>

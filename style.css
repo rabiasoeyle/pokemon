@@ -44,6 +44,7 @@ footer{
     padding: 16px;
     align-items: center;
     color:white;
+    text-align: left;
 }
 
 .showAllPokemonImage{
@@ -77,32 +78,90 @@ footer{
 }
 .pokemonInfoCard{
     width:50vw;
+    max-width:600px;
     height:70vh;
     background-image: url("./img/background.png") ;
     background-size: cover;
+    background-position: center;
     display:flex;
     justify-content: space-between;
     flex-direction: column;
-    padding:16px;
     border-radius: 24px;
     z-index:3;
+}
+.infoCardTop{
+    padding:16px 16px 0px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height:50%;
 }
 .infoContent{
     display: flex;
     flex-direction: column;
     gap: 8px;
-    padding-top:16px;
+   
+}
+.loadInfoSpan{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.infoCardBottom{
+    height: 50%;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    justify-content: space-between; 
+    background-color: white;
+    border-radius: 24px;
+    padding:16px;
 }
 .infoCardText{
-    height: 45%;
-    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 24px;
+
+}
+.fullWidth{
+    border: solid 1px;
+    border-radius: 24px;
+    height: 16px;
+    width:80%;
+    position: relative;
+    margin-top: 5px;
+}
+.showPercent{
+    background-color: aqua;
+    height: 16px;
+    display: block;
+    border-radius: 24px;
+}
+.statSpan{
+    display:flex;
+    gap:8px;
+    justify-content: space-between;
+
+}
+.statNumberAndShowLine{
+    width:50%;
+    display: flex;
+    gap:8px;
+    justify-content: end;
+}
+.infoCardLinks b{
+    border-radius: 24px;
 }
 .infoCardLinks b:hover{
     cursor: pointer;
     text-decoration: underline;
 }
 .infoCardImg{
-    width:100%;
+    width:80%;
+    max-width:330px;
 }
 .d-none{
     display:none;
@@ -114,6 +173,16 @@ footer{
     display:flex;
     justify-content: space-around;
     align-items: center;
+}
+.swipeButtons button{
+    width:50px;
+    height:40px;
+    background-color: rgb(233, 15, 7);
+    border-radius: 24px;
+}
+.swipeButtons button:hover{
+    cursor: pointer;
+    scale: 1.1;
 }
 
 @media(max-width:700px){
