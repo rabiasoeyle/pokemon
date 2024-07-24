@@ -4,6 +4,7 @@ let amount = 0;
 let startAmount = 0;
 let allPokemons = [];
 let filteredPokemons = [];
+let inputField;
 
 
 document.addEventListener('DOMContentLoaded', (event) => {
@@ -25,23 +26,42 @@ document.getElementById('pokemonInfoCard').addEventListener('click', (event) => 
 //dass der Klick nicht das cardBackground-Element erreicht und somit der erste Event Listener nicht ausgelöst wird.
 
 
- // Event Listener für das Suchfeld
- document.getElementById('searchField').addEventListener('input', (event) => {
-    filterPokemons(event.target.value);
-});
+document.getElementById('searchField').addEventListener('input', readInput);
+
 });
 
+function readInput(){
+    inputField = document.getElementById(searchField).value;
+    inputField = inputField.toLowerCase();//gibt den input in kleinbuchstaben wieder
+    filterPokemons(inputField);
+}
 
-function filterPokemons(query){
-    query = query.toLowerCase();//gibt den input in kleinbuchstaben wieder
-    filteredPokemons = allPokemons.filter(pokemon => pokemon.name.toLowerCase().includes(query));
+function filterPokemons(inputField){
+    filteredPokemons = allPokemons.filter(pokemons => pokemons.name.toLowerCase().includes(inputField));
     //alle pokemons, die durch den filter kommen, werden im Array gespeichert
     amount = 0;
     startAmount = 0;
     document.getElementById('content').innerHTML = '';
-    renderMorePokemons();
+    console.log('Filtered array:'+filteredPokemons);
+    renderMorePokemons({results: filteredPokemons}); // Hier die gefilterte Liste anzeigen
 }
 
+
+async function renderMorePokemons(pokemons){
+    let content = document.getElementById('content');
+    console.log("MainArray in RMP:" + Object.keys(pokemons));
+    amount = amount + 20;
+    for(let i=startAmount; i<amount; i++){
+        let pokemon = await loadPokemon(i+1);
+        let name = capitalizeFirstLetter(pokemons['results'][i]['name']);//for Capital letter
+        content.innerHTML += renderStartPageHTML(name, i, pokemon);
+        colorOfCard(pokemon, i); 
+    }
+    addEventListeners(pokemons, 0, amount);
+    startAmount += 20;
+    console.log("Length:" + amount);
+    console.log("start:" + startAmount);
+}
 
 function init(){
     renderStartPage();
@@ -70,21 +90,7 @@ async function loadMoreButton(pokemons){
 }
 
 
-async function renderMorePokemons(pokemons){
-    let content = document.getElementById('content');
-    console.log("MainArray in RMP:" + Object.keys(pokemons));
-    amount = amount + 10;
-    for(let i=startAmount; i<amount; i++){
-        let pokemon = await loadPokemon(i+1);
-        let name = capitalizeFirstLetter(pokemons['results'][i]['name']);//for Capital letter
-        content.innerHTML += renderStartPageHTML(name, i, pokemon);
-        colorOfCard(pokemon, i); 
-    }
-    addEventListeners(pokemons, 0, amount);
-    startAmount += 10;
-    console.log("Length:" + amount);
-    console.log("start:" + startAmount);
-}
+
 
 //adds an event listener to every card
 function addEventListeners(pokemons, start, end) {
@@ -254,11 +260,9 @@ function closePokemonCard(){
 
 
 async function loadMainPokemonData(){
-    let value = document.getElementById('searchField').value;
-    startUrl= `https://pokeapi.co/api/v2/pokemon?limit=1000&offset=${value}`;
-
     let response = await fetch(startUrl);
     let responseToJson = await response.json();
+    allPokemons = responseToJson.results; // Hier die allPokemons Liste füllen
     console.log("MainArray:" + Object.keys(responseToJson))
     return responseToJson;
 }
