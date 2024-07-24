@@ -6,28 +6,22 @@ let allPokemons = [];
 let filteredPokemons = [];
 let inputField;
 
-
 document.addEventListener('DOMContentLoaded', (event) => {
     init();
-
 // Event Listener zum Schließen des Popups, wenn außerhalb des pokemonInfoCard geklickt wird
 document.getElementById('cardBackground').addEventListener('click', (event) => {
     //kontrolle, ob nicht auf die PokemoninfoCard geklickt wurde
     if (!document.getElementById('pokemonInfoCard').contains(event.target)) {
         //falls alles passt wird diese aktion durchgeführt
-        closePokemonCard();
-    }
+        closePokemonCard();}
 });
-
 // Event Listener zum Verhindern des Schließens, wenn innerhalb des pokemonInfoCard geklickt wird
 document.getElementById('pokemonInfoCard').addEventListener('click', (event) => {
     event.stopPropagation(); // Verhindert das Weiterleiten des Click-Events
 });//Diese Methode verhindert, dass das Event weiter nach außen propagiert wird. Das bedeutet, 
 //dass der Klick nicht das cardBackground-Element erreicht und somit der erste Event Listener nicht ausgelöst wird.
 
-
 document.getElementById('searchField').addEventListener('input', readInput);
-
 });
 
 function readInput(){
@@ -45,7 +39,6 @@ function filterPokemons(inputField){
     console.log('Filtered array:'+filteredPokemons);
     renderMorePokemons({results: filteredPokemons}); // Hier die gefilterte Liste anzeigen
 }
-
 
 async function renderMorePokemons(pokemons){
     let content = document.getElementById('content');
@@ -67,7 +60,6 @@ function init(){
     renderStartPage();
 }
 
-
 async function renderStartPage(){
     let content = document.getElementById('content');
     let pokemons = await loadMainPokemonData();  
@@ -78,7 +70,6 @@ async function renderStartPage(){
     await loadMoreButton(pokemons);
 }
 
-
 async function loadMoreButton(pokemons){
     let main = document.getElementById('main');
     let loadMoreButton = document.createElement('button');
@@ -88,9 +79,6 @@ async function loadMoreButton(pokemons){
     loadMoreButton.addEventListener('click', () => renderMorePokemons(pokemons));
     main.appendChild(loadMoreButton);
 }
-
-
-
 
 //adds an event listener to every card
 function addEventListeners(pokemons, start, end) {
@@ -103,7 +91,6 @@ function addEventListeners(pokemons, start, end) {
             });
         }}
 }
-
 
 function colorOfCard(pokemon, i){
     let content = document.getElementById(`pokemon-${i}`);
@@ -152,7 +139,6 @@ function colorOfCard(pokemon, i){
         ; }
 }
 
-
 function renderStartPageHTML(name, i, pokemon){
     return `
     <div class="pokemonCards" id="pokemon-${i}">
@@ -177,9 +163,7 @@ async function openPokemoncard(i){
     name = capitalizeFirstLetter(name);
     pokemonInfo.innerHTML = openPokemoncardHTML(name, pokemon, i);
     loadAbouts(i);
-   
 }  
-
 
 function openPokemoncardHTML(name, pokemon, i){
  return   `
@@ -197,7 +181,6 @@ function openPokemoncardHTML(name, pokemon, i){
     `
 }
 
-
 async function openCardBefore(i){
     let pokemons = await loadMainPokemonData();  
     console.log("MainArray:" + Object.keys(pokemons['results']))
@@ -207,7 +190,6 @@ async function openCardBefore(i){
     }
     openPokemoncard(i);
 }
-
 
 async function openCardAfter(i){
     let pokemons = await loadMainPokemonData();  
@@ -219,14 +201,12 @@ async function openCardAfter(i){
     openPokemoncard(i);
 }
 
-
 async function loadAbouts(i){
     let content = document.getElementById('infoContent');
     content.innerHTML='';
     let pokemon = await loadPokemon(i+1);
     content.innerHTML= loadAboutsHTML(pokemon);
 }
-
 
 function loadAboutsHTML(pokemon){
 return `
@@ -237,7 +217,6 @@ return `
     <span class="loadInfoSpan"><b>Base-Experience:</b> <span>${pokemon['base_experience']}</span></span>
     `
 }
-
 
 async function loadBasestate(i){
     let content = document.getElementById('infoContent');
@@ -251,13 +230,11 @@ function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1)
 }
 
-
 function closePokemonCard(){
     let popup = document.getElementById('cardBackground');
     popup.classList.add('d-none');
     popup.classList.remove('d-flex');
 }
-
 
 async function loadMainPokemonData(){
     let response = await fetch(startUrl);
@@ -267,14 +244,12 @@ async function loadMainPokemonData(){
     return responseToJson;
 }
 
-
 async function loadPokemon(path){
     let response = await fetch(typeUrl + path);
     let responseToJson =  response.json();
     console.log('PokemonArray: '+ responseToJson);
     return responseToJson;
 }
-
 
 function pokemonType(pokemon){
     let result='';
@@ -284,7 +259,6 @@ function pokemonType(pokemon){
     }
     return  result;
 }
-
 
 function pokemonStats(pokemon){
     let result ='';
@@ -296,7 +270,6 @@ function pokemonStats(pokemon){
     }
     return result;
 }
-
 
 function pokemonStatsHTML(statName, pokemon, i, baseStat){
     return  `
