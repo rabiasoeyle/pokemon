@@ -7,18 +7,19 @@ let startAmount = 0;
 document.addEventListener('DOMContentLoaded', (event) => {
     init();
 
-    // Event Listener zum Schließen des Popups, wenn außerhalb des pokemonInfoCard geklickt wird
+// Event Listener zum Schließen des Popups, wenn außerhalb des pokemonInfoCard geklickt wird
 document.getElementById('cardBackground').addEventListener('click', (event) => {
-        if (!document.getElementById('pokemonInfoCard').contains(event.target)) {
-            closePokemonCard();
-        }
-    });
-
-    // Event Listener zum Verhindern des Schließens, wenn innerhalb des pokemonInfoCard geklickt wird
-document.getElementById('pokemonInfoCard').addEventListener('click', (event) => {
-        event.stopPropagation(); // Verhindert das Weiterleiten des Click-Events
-    });
+    if (!document.getElementById('pokemonInfoCard').contains(event.target)) {
+        closePokemonCard();
+    }
 });
+
+// Event Listener zum Verhindern des Schließens, wenn innerhalb des pokemonInfoCard geklickt wird
+document.getElementById('pokemonInfoCard').addEventListener('click', (event) => {
+    event.stopPropagation(); // Verhindert das Weiterleiten des Click-Events
+});
+});
+
 
 function init(){
     renderStartPage();
@@ -63,7 +64,7 @@ async function renderMorePokemons(pokemons){
     console.log("start:" + startAmount);
 }
 
-//add an event listener to every card
+//adds an event listener to every card
 function addEventListeners(pokemons, start, end) {
     for (let i = start; i < end; i++) {
         let card = document.getElementById(`pokemon-${i}`);
@@ -147,7 +148,14 @@ async function openPokemoncard(i){
     pokemonInfo.innerHTML ='';
     let name = pokemons['results'][i]['name']
     name = capitalizeFirstLetter(name);
-    pokemonInfo.innerHTML = `
+    pokemonInfo.innerHTML = openPokemoncardHTML(name, pokemon, i);
+    loadAbouts(i);
+   
+}  
+
+
+function openPokemoncardHTML(name, pokemon, i){
+ return   `
     <div class="infoCardTop">
         <h2 class="infoCardName">${name}</h2>
         <img class="infoCardImg" src="${pokemon['sprites']['other']['official-artwork']['front_default']}">
@@ -160,9 +168,7 @@ async function openPokemoncard(i){
         <div class="swipeButtons"><button id="cardBeforeButton"onclick="openCardBefore(${i})"><b><</b></button> <button onclick="openCardAfter(${i})"><b>></b></button></div>
     </div>
     `
-    loadAbouts(i);
-   
-}  
+}
 
 
 async function openCardBefore(i){
@@ -191,7 +197,12 @@ async function loadAbouts(i){
     let content = document.getElementById('infoContent');
     content.innerHTML='';
     let pokemon = await loadPokemon(i+1);
-    content.innerHTML= `
+    content.innerHTML= loadAboutsHTML(pokemon);
+}
+
+
+function loadAboutsHTML(pokemon){
+return `
     <span class="loadInfoSpan"><b>Type:</b><span>${pokemonType(pokemon)}</span></span>
     <span class="loadInfoSpan"><b>Height:</b><span> ${pokemon['height']}</span></span>
     <span class="loadInfoSpan"><b>Order:</b> <span>${pokemon['order']}</span></span>
@@ -220,8 +231,8 @@ function closePokemonCard(){
     popup.classList.remove('d-flex');
 }
 
-async function loadMainPokemonData(){
 
+async function loadMainPokemonData(){
     let response = await fetch(startUrl);
     let responseToJson = await response.json();
     console.log("MainArray:" + Object.keys(responseToJson))
@@ -235,6 +246,7 @@ async function loadPokemon(path){
     console.log('PokemonArray: '+ responseToJson);
     return responseToJson;
 }
+
 
 function pokemonType(pokemon){
     let result='';
@@ -252,13 +264,25 @@ function pokemonStats(pokemon){
         let statName = pokemon['stats'][i]['stat']['name'];
         statName = capitalizeFirstLetter(statName);
         let baseStat = pokemon['stats'][i]['base_stat'];
-        result += `
+        result += pokemonStatsHTML(statName, pokemon, i, baseStat);
+    }
+    return result;
+}
+
+
+function pokemonStatsHTML(statName, pokemon, i, baseStat){
+    return  `
         <span class="statSpan">
             <b>${statName}:</b> 
             <div class="statNumberAndShowLine"><b>${pokemon['stats'][i]['base_stat']}</b>
                 <div class="fullWidth"> <span id="showPercent${i}"class="showPercent" style="width: ${baseStat}%;"></span></div>
             </div>
         </span>`
-    }
-    return result;
+}
+
+
+function searchSynonyms(){
+    let value = document.getElementById('search').value;
+    let changedUrl = `https://pokeapi.co/api/v2/pokemon/${value}`;
+
 }
