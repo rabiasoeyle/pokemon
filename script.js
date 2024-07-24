@@ -2,6 +2,8 @@ let startUrl = "https://pokeapi.co/api/v2/pokemon?limit=1000&offset=0";
 let typeUrl = "https://pokeapi.co/api/v2/pokemon/";
 let amount = 0;
 let startAmount = 0;
+let allPokemons = [];
+let filteredPokemons = [];
 
 
 document.addEventListener('DOMContentLoaded', (event) => {
@@ -9,7 +11,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 // Event Listener zum Schließen des Popups, wenn außerhalb des pokemonInfoCard geklickt wird
 document.getElementById('cardBackground').addEventListener('click', (event) => {
+    //kontrolle, ob nicht auf die PokemoninfoCard geklickt wurde
     if (!document.getElementById('pokemonInfoCard').contains(event.target)) {
+        //falls alles passt wird diese aktion durchgeführt
         closePokemonCard();
     }
 });
@@ -17,8 +21,26 @@ document.getElementById('cardBackground').addEventListener('click', (event) => {
 // Event Listener zum Verhindern des Schließens, wenn innerhalb des pokemonInfoCard geklickt wird
 document.getElementById('pokemonInfoCard').addEventListener('click', (event) => {
     event.stopPropagation(); // Verhindert das Weiterleiten des Click-Events
+});//Diese Methode verhindert, dass das Event weiter nach außen propagiert wird. Das bedeutet, 
+//dass der Klick nicht das cardBackground-Element erreicht und somit der erste Event Listener nicht ausgelöst wird.
+
+
+ // Event Listener für das Suchfeld
+ document.getElementById('searchField').addEventListener('input', (event) => {
+    filterPokemons(event.target.value);
 });
 });
+
+
+function filterPokemons(query){
+    query = query.toLowerCase();//gibt den input in kleinbuchstaben wieder
+    filteredPokemons = allPokemons.filter(pokemon => pokemon.name.toLowerCase().includes(query));
+    //alle pokemons, die durch den filter kommen, werden im Array gespeichert
+    amount = 0;
+    startAmount = 0;
+    document.getElementById('content').innerHTML = '';
+    renderMorePokemons();
+}
 
 
 function init(){
@@ -28,9 +50,9 @@ function init(){
 
 async function renderStartPage(){
     let content = document.getElementById('content');
-    // let main = document.getElementById('main');
     let pokemons = await loadMainPokemonData();  
-    console.log("MainArray in RSP:" + Object.keys(pokemons))
+    filteredPokemons = allPokemons; // initially, show all pokemons
+    console.log("MainArray in RSP:" + Object.keys(pokemons['results']))
     content.innerHTML ='';
     await renderMorePokemons(pokemons);
     await loadMoreButton(pokemons);
@@ -50,7 +72,7 @@ async function loadMoreButton(pokemons){
 
 async function renderMorePokemons(pokemons){
     let content = document.getElementById('content');
-    console.log("MainArray in RMP:" + Object.keys(pokemons))
+    console.log("MainArray in RMP:" + Object.keys(pokemons));
     amount = amount + 10;
     for(let i=startAmount; i<amount; i++){
         let pokemon = await loadPokemon(i+1);
@@ -135,7 +157,6 @@ function renderStartPageHTML(name, i, pokemon){
         </div>
     </div>`
 } 
-
 
 //opens one detailed Infocard of a pokemon which was clicked on
 async function openPokemoncard(i){
@@ -233,6 +254,9 @@ function closePokemonCard(){
 
 
 async function loadMainPokemonData(){
+    let value = document.getElementById('searchField').value;
+    startUrl= `https://pokeapi.co/api/v2/pokemon?limit=1000&offset=${value}`;
+
     let response = await fetch(startUrl);
     let responseToJson = await response.json();
     console.log("MainArray:" + Object.keys(responseToJson))
@@ -278,11 +302,4 @@ function pokemonStatsHTML(statName, pokemon, i, baseStat){
                 <div class="fullWidth"> <span id="showPercent${i}"class="showPercent" style="width: ${baseStat}%;"></span></div>
             </div>
         </span>`
-}
-
-
-function searchSynonyms(){
-    let value = document.getElementById('search').value;
-    let changedUrl = `https://pokeapi.co/api/v2/pokemon/${value}`;
-
 }
