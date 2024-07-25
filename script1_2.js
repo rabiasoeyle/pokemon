@@ -5,7 +5,6 @@ let startAmount = 0;
 let allPokemons = [];
 let filteredPokemons = [];
 let inputField;
-let pokemon = [];
 
 document.addEventListener('DOMContentLoaded', (event) => {
     init();
@@ -22,15 +21,35 @@ document.addEventListener('DOMContentLoaded', (event) => {
     document.getElementById('pokemonInfoCard').addEventListener('click', (event) => {
         event.stopPropagation(); // Verhindert das Weiterleiten des Click-Events
     });
-})
+
+     // Event Listener für das Suchfeld
+     document.getElementById('searchField').addEventListener('input', readInput);
+     readInput();
+    });
 
 function init() {
     renderStartPage();
 }
 
+function readInput() {
+    inputField = document.getElementById('searchField').value; // 'searchField' sollte die ID des Eingabefelds sein
+    inputField = inputField.toLowerCase(); // Umwandeln in Kleinbuchstaben
+    filterPokemons(inputField);
+}
+
+function filterPokemons(inputField) {
+    filteredPokemons = allPokemons.filter(pokemon => pokemon.name.toLowerCase().includes(inputField));
+    // Alle Pokemons, die durch den Filter kommen, werden im Array gespeichert
+    amount = 0;
+    startAmount = 0;
+    document.getElementById('content').innerHTML = '';
+    renderMorePokemons({results: filteredPokemons}); // Hier die gefilterte Liste anzeigen
+}
+
 async function renderStartPage() {
     let content = document.getElementById('content');
     let pokemons = await loadMainPokemonData();
+    filteredPokemons = allPokemons;
     content.innerHTML = '';
     await renderMorePokemons(pokemons);
     await loadMoreButton(pokemons);
@@ -44,8 +63,9 @@ async function renderMorePokemons(pokemons) {
         let name = capitalizeFirstLetter(pokemons.results[i].name); // for Capital letter
         content.innerHTML += renderStartPageHTML(name, i, pokemon);
     }
-    startAmount = startAmount+ 10;
-    addEventListeners(pokemons, startAmount, amount);
+
+   addEventListeners(0, amount);
+    startAmount = amount;
     
 }
 
@@ -71,13 +91,13 @@ async function loadMoreButton(pokemons) {
 }
 
 // Adds an event listener to every card
-function addEventListeners(pokemons, start, end) {
+function addEventListeners(start, end) {
     for (let i = start; i < end; i++) {
         let card = document.getElementById(`pokemon-${i}`);
         if (card) {
             card.addEventListener("click", () => {
                 console.log(`Pokemon ${i} clicked`);
-                openPokemoncard(i, pokemons);
+                openPokemoncard(i);
             });
         }
     }
@@ -85,15 +105,14 @@ function addEventListeners(pokemons, start, end) {
 
 // Opens one detailed Infocard of a pokemon which was clicked on
 async function openPokemoncard(i) {
-    let pokemons = await loadMainPokemonData();
+    let pokemon = await loadPokemon(filteredPokemons[i].name);
     let popup = document.getElementById('cardBackground');
     popup.classList.remove('d-none');
     popup.classList.add('d-flex');
-    let pokemon = await loadPokemon(pokemons.results[i].name);
     let pokemonInfo = document.getElementById('pokemonInfoCard');
     pokemonInfo.innerHTML = '';
-    let name = pokemons.results[i].name;
-    name = capitalizeFirstLetter(pokemons.results[i].name);
+    // let name = pokemon.results[i].name;
+    let name = capitalizeFirstLetter(filteredPokemons[i].name);
     pokemonInfo.innerHTML = openPokemoncardHTML(name, pokemon, i);
     loadAbouts(i);
 }
@@ -116,21 +135,21 @@ function openPokemoncardHTML(name, pokemon, i) {
 }
 
 async function openCardBefore(i) {
-    let pokemons = await loadMainPokemonData(); ;
+    let pokemons = {results: filteredPokemons}; ;
     i = i - 1;
     if (i < 0) {
-        i = pokemons.results.length - 1;
+        i = filteredPokemons.length - 1;
     }
-    openPokemoncard(i,pokemons);
+    openPokemoncard(i);
 }
 
 async function openCardAfter(i) {
-    let pokemons = await loadMainPokemonData(); ;
+    let pokemons = {results: filteredPokemons}; ;
     i = i + 1;
-    if (i > pokemons.results.length - 1) {
+    if (i >= filteredPokemons.length) {
         i = 0;
     }
-    openPokemoncard(i, pokemons);
+    openPokemoncard(i);
 }
 
 async function loadAbouts(i) {
@@ -140,17 +159,17 @@ async function loadAbouts(i) {
     let buttonBase = document.getElementById('basestate');
     button.classList.add('loadBorder');
     buttonBase.classList.remove('loadBorder');
-    let pokemon = await loadPokemon(i+1);
+    let pokemon = await loadPokemon(filteredPokemons[i].name);
     content.innerHTML = loadAboutsHTML(pokemon);
 }
 
 function loadAboutsHTML(pokemon) {
     return `
-    <span class="loadInfoSpan"><b>Type:</b><span>${pokemonType(pokemon)}</span></span>
+    <span class="loadInfoSpan"><b>Type:</b><span class="typeOnBigView">${pokemonType(pokemon)}</span></span>
     <span class="loadInfoSpan"><b>Height:</b><span> ${pokemon.height}</span></span>
     <span class="loadInfoSpan"><b>Order:</b> <span>${pokemon.order}</span></span>
     <span class="loadInfoSpan"><b>Weight:</b> <span>${pokemon.weight}</span></span> 
-    <span class="loadInfoSpan"><b>Base-Experience:</b> <span>${pokemon.base_experience}</span></span>`;
+    <span class="loadInfoSpan"><b>Base-Experience:</b> <span>${pokemon['base_experience']}</span></span>`;
 }
 
 async function loadBasestate(i) {
@@ -160,8 +179,7 @@ async function loadBasestate(i) {
     let buttonBase = document.getElementById('basestate');
     button.classList.remove('loadBorder');
     buttonBase.classList.add('loadBorder');
-
-    let pokemon = await loadPokemon(i+1);
+    let pokemon = await loadPokemon(filteredPokemons[i].name);
     content.innerHTML = pokemonStats(pokemon);
 }
 
@@ -179,6 +197,7 @@ function closePokemonCard() {
 async function loadMainPokemonData() {
     let response = await fetch(startUrl);
     let responseToJson = await response.json();
+    allPokemons = responseToJson.results; // Hier die allPokemons Liste füllen
     return responseToJson;
 }
 
@@ -191,8 +210,8 @@ async function loadPokemon(path) {
 function pokemonType(pokemon) {
     let result = '';
     for (let i = 0; i < pokemon.types.length; i++) {
-        result += pokemon.types[i].type.name;
-        result += ` `;
+        result += `<div class="typeDiv ${pokemon.types[i].type.name}">${pokemon.types[i].type.name}</div>`;
+        // result += ` `;
     }
     return result;
 }
@@ -212,8 +231,13 @@ function pokemonStatsHTML(statName, pokemon, i, baseStat) {
     return `
         <span class="statSpan">
             <b>${statName}:</b> 
-            <div class="statNumberAndShowLine"><b>${pokemon.stats[i]['base_stat']}</b>
-                <div class="fullWidth"> <span id="showPercent${i}" class="showPercent" style="width: ${baseStat}%;"></span></div>
+            <div class="statNumberAndShowLine">
+                <b>${pokemon.stats[i]['base_stat']}</b>
+                <div class="fullWidth"> 
+                    <div class="fullPercent">
+                    <span id="showPercent${i}" class="showPercent" style="width: ${baseStat}%;"></span>
+                    </div>
+                </div>
             </div>
         </span>`;
 }

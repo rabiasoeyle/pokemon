@@ -1,13 +1,3 @@
-function init(){
-    renderPokemonCards();
-}
-
-async function renderPokemonCards(){
-let content= document.getElementById('content');
-let pokemons = await getAllPokemons();
-
-}
-
 
 async function getAllPokemons(){
     let response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=1000&offset=0");
@@ -30,11 +20,11 @@ function onloadFunc() {
   // Die such Function 
   async function searchPokemonName() {
     try {
-      const pokemonName = document
+      let pokemonName = document
         .getElementById("pokemonName")
         .value.toLowerCase();
-      const response = await fetch(
-        https://pokeapi.co/api/v2/pokemon/${pokemonName}
+      let response = await fetch(
+        "https://pokeapi.co/api/v2/pokemon/${pokemonName}"
       );
       if (!response.ok) {
         throw new Error("Could not fetch resource");

@@ -1,24 +1,51 @@
 body{
     margin:0;
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 header{
-    height:10vh;
     margin:0;
-    padding:80px;
-    
+    padding:80px 0px;
+    min-width:100%;
 }
-.header{
-    display:flex;
+.headerDiv{
+    max-width: 1920px;
+    width:70vW;
+    display: flex;
     align-items: center;
     justify-content: space-between;
+    background-color: rgb(245, 96, 96);
+    height: 10vh;
+}
+
+.header{
+    background-color: rgb(245, 96, 96);
+    display: flex;
+    justify-content: center;
+}
+.headerLeft{
+    width:40%;
+    display:flex;
+    gap:16px;
+}
+.headerLeft:hover{
+   cursor: pointer;
+}
+.headerLeft img{
+    width:50px;
 }
 footer{
     height:10vh;
+    background-color: rgb(245, 96, 96);
+    max-width:1920px;
 }
 .main{
     text-align: center;
     margin:40px;
+    max-width:1920px;
+    min-height: 80vh;
 }
 .content{
     display:flex;
@@ -26,13 +53,18 @@ footer{
     gap:16px;
     justify-content: center;
 }
-
+.typeDiv{
+    box-shadow: 1px 2px 6px 4px rgba(0, 0, 255, .2);
+    border-radius: 24px;
+    padding: 0px 8px;
+    margin: 8px;
+    min-width: 60px;
+    color: white;
+}
 .pokemonCards{
     width:200px;
     height:250px;
     border-radius: 24px;
-    /* background-image: url("/img/pokeballDesign.png"); 
-    opacity: 0.2;  */
 }
 .pokemonCards:hover{
     cursor: pointer;
@@ -43,14 +75,14 @@ footer{
     gap:16px;
     height:200px;
     justify-content: space-between;
-    padding: 16px;
+    padding: 8px;
     align-items: center;
     color:white;
     text-align: left;
 }
 
 .showAllPokemonImage{
-    height: 100px;
+    height: 55%;
     width: auto;
     object-fit: contain;
 }
@@ -83,7 +115,7 @@ footer{
     width:50vw;
     max-width:600px;
     height:70vh;
-    background-image: url("./img/background.png") ;
+    background-image: url("./img/pokeballDesign.png") ;
     background-size: cover;
     background-position: center;
     display:flex;
@@ -91,6 +123,7 @@ footer{
     flex-direction: column;
     border-radius: 24px;
     z-index:3;
+    border: solid 6px rgb(233, 15, 7);
 }
 .infoCardTop{
     padding:16px 16px 0px 16px;
@@ -99,6 +132,9 @@ footer{
     align-items: center;
     justify-content: space-between;
     height:50%;
+}
+.infoCardName{
+    color:rgb(233, 15, 7);
 }
 .infoContent{
     display: flex;
@@ -121,12 +157,16 @@ footer{
     background-color: white;
     border-radius: 24px;
     padding:0px 0px 16px 0px;
+    border-top: solid 4px rgb(233, 15, 7);
 }
 .infoCardText{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     gap: 24px;
+}
+.typeOnBigView{
+    display: flex;
 }
 .fullWidth{
     border: solid 1px;
@@ -135,6 +175,9 @@ footer{
     width:80%;
     position: relative;
     margin-top: 5px;
+}
+.fullPercent{
+    width:60%;
 }
 .showPercent{
     background-color: aqua;
@@ -172,7 +215,8 @@ footer{
     border-radius: 24px;
 }
 .loadBorder{
-    background: red;
+    background-color: rgb(233, 15, 7);
+    color:white;
 }
 .infoCardLinks b:hover{
     cursor: pointer;
@@ -204,14 +248,17 @@ footer{
     cursor: pointer;
     scale: 1.1;
 }
+h1{
+    color:white !important;
+}
 
 @media(max-width:700px){
-    .header{
+    .headerDiv{
         flex-direction: column;
-        height:20vh;
         padding-bottom: 20px;
+        align-items: flex-start;
     }
-    .header form{
+    .headerDiv form{
         display:flex;
         align-items: center;
         justify-content: center;
