@@ -24,11 +24,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
      // Event Listener für das Suchfeld
      document.getElementById('searchField').addEventListener('input', readInput);
-     readInput();
     });
 
-function init() {
-    renderStartPage();
+ async function init() {
+    await renderStartPage();
+   
 }
 
 function readInput() {
@@ -37,13 +37,23 @@ function readInput() {
     filterPokemons(inputField);
 }
 
-function filterPokemons(inputField) {
+async function filterPokemons(inputField) {
+    if (inputField.length <= 0) {
+        // Wenn das Eingabefeld leer ist, rendere die Startseite erneut
+        renderStartPage();
+        return;
+    }
+    if (inputField.length < 3) {
+        return 
+         // Stoppt die Funktion, wenn der Eingabetext weniger als 3 Zeichen hat
+    }else{
     filteredPokemons = allPokemons.filter(pokemon => pokemon.name.toLowerCase().includes(inputField));
     // Alle Pokemons, die durch den Filter kommen, werden im Array gespeichert
     amount = 0;
     startAmount = 0;
     document.getElementById('content').innerHTML = '';
     renderMorePokemons({results: filteredPokemons}); // Hier die gefilterte Liste anzeigen
+    }
 }
 
 async function renderStartPage() {
@@ -52,19 +62,25 @@ async function renderStartPage() {
     filteredPokemons = allPokemons;
     content.innerHTML = '';
     await renderMorePokemons(pokemons);
+    let button = document.getElementById('loadMoreButton');
+    if(button){
+        
+    }else{
     await loadMoreButton(pokemons);
+    }
+    
 }
 
 async function renderMorePokemons(pokemons) {
     let content = document.getElementById('content');
     amount = amount +10;
     for (let i = startAmount; i < amount; i++) {
-        pokemon = await loadPokemon(pokemons.results[i].name);
+        let pokemon = await loadPokemon(pokemons.results[i].name);
         let name = capitalizeFirstLetter(pokemons.results[i].name); // for Capital letter
         content.innerHTML += renderStartPageHTML(name, i, pokemon);
-    }
-
-   addEventListeners(0, amount);
+    } 
+    
+    addEventListeners(0, amount);
     startAmount = amount;
     
 }
@@ -81,7 +97,7 @@ function renderStartPageHTML(name, i, pokemon) {
 }
 
 async function loadMoreButton(pokemons) {
-    let main = document.getElementById('main');
+    let main = document.getElementById('button');
     let loadMoreButton = document.createElement('button');
     loadMoreButton.id = 'loadMoreButton';
     loadMoreButton.classList.add('loadMoreButton');

@@ -17,7 +17,7 @@ header{
     align-items: center;
     justify-content: space-between;
     background-color: rgb(245, 96, 96);
-    height: 10vh;
+    height: 8vh;
 }
 
 .header{
@@ -243,6 +243,7 @@ footer{
     background-color: rgb(233, 15, 7);
     border-radius: 24px;
     border: none;
+    color:white;
 }
 .swipeButtons button:hover{
     cursor: pointer;
