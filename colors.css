@@ -1,37 +1,49 @@
-.green{
+.grass{
     background-color: rgb(10, 189, 10)!important;
 }
-.red{
-    background-color: rgb(204, 21, 21);
+.fire{
+    background-color: rgb(204, 21, 21)!important;
 }
-.grey{
+.dragon{
+    background-color: rgb(204, 21, 21)!important;
+}
+.rock{
     background-color: grey;
 }
-.blue{
-    background-color: rgb(109, 166, 245);
+.fighting{
+    background-color: rgb(62, 223, 145);
 }
-.yellow{
-    background-color: rgb(232, 236, 32);
+.ghost{
+    background-color: rgb(228, 42, 197);
 }
-.babyblue{
+.water{
+    background-color: rgb(109, 166, 245)!important;
+}
+.electric{
+    background-color: rgb(197, 201, 5);
+}
+.psychic{
+    background-color: rgb(13, 13, 233);
+}
+.flying{
     background-color: aqua;
 }
-.brightgrey{
+.steel{
     background-color: grey;
 }
-.brightgreen{
+.bug{
     background-color: greenyellow;
 }
-.purple{
+.poison{
     background-color: blueviolet;
 }
-.darkwhite{
-    background-color: white;
+.ice{
+    background-color: rgb(165, 234, 215);
 }
-.brown{
+.ground{
     background-color: rgb(125, 83, 0);
 }
-.pink{
+.fairy{
     background-color: pink;
 }
 .normal{
