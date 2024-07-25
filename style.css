@@ -65,7 +65,11 @@ footer{
     width:200px;
     height:250px;
     border-radius: 24px;
+    background-image: url("/img/pokeball2DesignDark.png"); 
+    background-size: cover;
+    background-blend-mode: screen;
 }
+
 .pokemonCards:hover{
     cursor: pointer;
     scale:1.1;
@@ -115,26 +119,24 @@ footer{
     width:50vw;
     max-width:600px;
     height:70vh;
-    background-image: url("./img/pokeballDesign.png") ;
-    background-size: cover;
-    background-position: center;
     display:flex;
     justify-content: space-between;
     flex-direction: column;
     border-radius: 24px;
-    z-index:3;
-    border: solid 6px rgb(233, 15, 7);
+    border: solid 6px;
 }
 .infoCardTop{
+    background-image: url("./img/pokeball2DesignDark.png") ;
+    background-blend-mode: screen;
+    background-size: cover;
+    background-position: center;
     padding:16px 16px 0px 16px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
     height:50%;
-}
-.infoCardName{
-    color:rgb(233, 15, 7);
+    border-radius: 24px;
 }
 .infoContent{
     display: flex;
@@ -157,7 +159,6 @@ footer{
     background-color: white;
     border-radius: 24px;
     padding:0px 0px 16px 0px;
-    border-top: solid 4px rgb(233, 15, 7);
 }
 .infoCardText{
     display: flex;
@@ -240,7 +241,6 @@ footer{
 .swipeButtons button{
     width:50px;
     height:40px;
-    background-color: rgb(233, 15, 7);
     border-radius: 24px;
     border: none;
     color:white;

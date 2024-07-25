@@ -127,26 +127,25 @@ async function openPokemoncard(i) {
     popup.classList.add('d-flex');
     let pokemonInfo = document.getElementById('pokemonInfoCard');
     pokemonInfo.innerHTML = '';
-    // let name = pokemon.results[i].name;
     let name = capitalizeFirstLetter(filteredPokemons[i].name);
     pokemonInfo.innerHTML = openPokemoncardHTML(name, pokemon, i);
-    loadAbouts(i);
+    loadAbouts(pokemon, i);
 }
 
 function openPokemoncardHTML(name, pokemon, i) {
     return `
-    <div class="infoCardTop">
+    <div class="infoCardTop ${pokemon.types[0].type.name}">
         <h2 class="infoCardName">${name}</h2>
         <img class="infoCardImg" src="${pokemon.sprites.other['official-artwork'].front_default}">
     </div>
     <div class="infoCardBottom" id="pokemonInfo">
         <div class="infoCardText">
             <div class="infoCardLinks" id="infoCardLinks"> 
-                <b class="loadAbouts" onclick="loadAbouts(${i})" id="about">About</b>  
-                <b class="loadBasestate" onclick="loadBasestate(${i})" id="basestate">Basestate</b></div>
+                <b class="loadAbouts" onclick="loadAbouts(${pokemon, i})" id="about">About</b>  
+                <b class="loadBasestate" onclick="loadBasestate(${pokemon, i})" id="basestate">Basestate</b></div>
             <div id="infoContent" class="infoContent"></div>
         </div>
-        <div class="swipeButtons"><button id="cardBeforeButton" onclick="openCardBefore(${i})"><b><</b></button> <button onclick="openCardAfter(${i})"><b>></b></button></div>
+        <div class="swipeButtons"><button id="cardBeforeButton" onclick="openCardBefore(${i})" class="${pokemon.types[0].type.name}"><b ><</b></button> <button onclick="openCardAfter(${i})" class="${pokemon.types[0].type.name}"><b>></b></button></div>
     </div>`;
 }
 
@@ -168,13 +167,15 @@ async function openCardAfter(i) {
     openPokemoncard(i);
 }
 
-async function loadAbouts(i) {
+async function loadAbouts(pokemons, i) {
     let content = document.getElementById('infoContent');
     content.innerHTML = '';
     let button = document.getElementById('about');
     let buttonBase = document.getElementById('basestate');
+    button.classList.add(`${pokemons.types[0].type.name}`);
     button.classList.add('loadBorder');
     buttonBase.classList.remove('loadBorder');
+    buttonBase.classList.remove(`${pokemons.types[0].type.name}`);
     let pokemon = await loadPokemon(filteredPokemons[i].name);
     content.innerHTML = loadAboutsHTML(pokemon);
 }
@@ -188,12 +189,15 @@ function loadAboutsHTML(pokemon) {
     <span class="loadInfoSpan"><b>Base-Experience:</b> <span>${pokemon['base_experience']}</span></span>`;
 }
 
-async function loadBasestate(i) {
+async function loadBasestate(pokemons, i) {
+    console.log(pokemons);
     let content = document.getElementById('infoContent');
     content.innerHTML = '';
     let button = document.getElementById('about');
     let buttonBase = document.getElementById('basestate');
+    button.classList.remove(`${pokemons.types[0].type.name}`);
     button.classList.remove('loadBorder');
+    buttonBase.classList.add(`${pokemons.types[0].type.name}`);
     buttonBase.classList.add('loadBorder');
     let pokemon = await loadPokemon(filteredPokemons[i].name);
     content.innerHTML = pokemonStats(pokemon);
