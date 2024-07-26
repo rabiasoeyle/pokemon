@@ -6,8 +6,18 @@ let allPokemons = [];
 let filteredPokemons = [];
 let inputField;
 
-document.addEventListener('DOMContentLoaded', (event) => {
+ window.addEventListener("load", ()=> {
+        const loader = document.querySelector(".loader");
+        loader.classList.add("loader-hidden");
+        loader.addEventListener("transitionend", ()=>{
+            document.body.removeChild("loader");
+        })
+    })
+    
+    document.addEventListener('DOMContentLoaded', (event) => {
     init();
+
+   
 
     // Event Listener zum Schließen des Popups, wenn außerhalb des pokemonInfoCard geklickt wird
     document.getElementById('cardBackground').addEventListener('click', (event) => {
@@ -26,8 +36,21 @@ document.addEventListener('DOMContentLoaded', (event) => {
      document.getElementById('searchField').addEventListener('input', readInput);
     });
 
+
 async function init() {
+    showLoader();
     await renderStartPage();
+    hideLoader();
+}
+
+function showLoader() {
+    const loader = document.querySelector(".loader");
+    loader.classList.remove("loader-hidden");
+}
+
+function hideLoader() {
+    const loader = document.querySelector(".loader");
+    loader.classList.add("loader-hidden");
 }
 
 async function readInput() {
@@ -75,10 +98,12 @@ async function renderStartPage() {
 }
 
 async function renderMorePokemons(pokemons) {
+    showLoader();
     let loadMoreButton = document.getElementById('loadMoreButton');
     if (loadMoreButton) {
         loadMoreButton.disabled = true; // Button deaktivieren
     }
+    
     let content = document.getElementById('content');
     amount = amount +10;
     for (let i = startAmount; i < amount; i++) {
@@ -92,7 +117,7 @@ async function renderMorePokemons(pokemons) {
     if (loadMoreButton) {
         loadMoreButton.disabled = false; // Button wieder aktivieren
     }
-    
+    hideLoader();
 }
 
 function renderStartPageHTML(name, i, pokemon) {

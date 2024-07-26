@@ -81,7 +81,7 @@ header{
     width:200px;
     height:250px;
     border-radius: 24px;
-    background-image: url("/img/pokeball2DesignDark.png"); 
+    background-image: url("./img/pokeball2DesignDark.png"); 
     background-size: cover;
     background-blend-mode: screen;
 }
