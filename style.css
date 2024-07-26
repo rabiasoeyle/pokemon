@@ -47,10 +47,13 @@ header{
 }
 .main{
     text-align: center;
-    max-width:1920px;
     min-width: 100%;
     min-height: 80vh;
     background-color: rgb(16, 16, 15);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 .content{
     display:flex;
@@ -58,6 +61,7 @@ header{
     gap:16px;
     justify-content: center;
     margin:40px;
+    max-width: 1920px;
     
 }
 .typeDiv{
@@ -96,9 +100,16 @@ header{
     object-fit: contain;
 }
 .pokemonName{
-    padding:16px;
     margin:0;
     font-size:24px;
+    color:white;
+}
+.idAndName{
+    display:flex;
+    flex-direction: column;
+    margin-top:16px;
+}
+.idSpan{
     color:white;
 }
 .loadMoreButton{

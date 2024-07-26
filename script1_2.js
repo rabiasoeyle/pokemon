@@ -38,12 +38,13 @@ function readInput() {
 }
 
 async function filterPokemons(inputField) {
-    if (inputField.length <= 0) {
+    if (inputField.length <= 0 ) {
         // Wenn das Eingabefeld leer ist, rendere die Startseite erneut
         renderStartPage();
         return;
     }
-    if (inputField.length < 3) {
+    
+    if (inputField.length < 3 ) {
         return 
          // Stoppt die Funktion, wenn der Eingabetext weniger als 3 Zeichen hat
     }else{
@@ -88,7 +89,10 @@ async function renderMorePokemons(pokemons) {
 function renderStartPageHTML(name, i, pokemon) {
     return `
     <div class="pokemonCards ${pokemon.types[0].type.name}" id="pokemon-${i}">
-        <h2 class="pokemonName">${name}</h2>
+        <div class="idAndName">
+            <span class="idSpan">no.${pokemon.id}</span>
+            <h2 class="pokemonName">${name}</h2>
+        </div>
         <div class="typeAndImg">
            <div class="allTypesDiv">${pokemonType(pokemon)} </div>
            <img class="showAllPokemonImage" src="${pokemon.sprites.other['official-artwork'].front_default}">
@@ -102,8 +106,9 @@ async function loadMoreButton(pokemons) {
     loadMoreButton.id = 'loadMoreButton';
     loadMoreButton.classList.add('loadMoreButton');
     loadMoreButton.innerText = 'Load More';
-    loadMoreButton.addEventListener('click', () => renderMorePokemons(pokemons));
     main.appendChild(loadMoreButton);
+    loadMoreButton.addEventListener('click', () => renderMorePokemons(pokemons));
+    
 }
 
 // Adds an event listener to every card
