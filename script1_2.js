@@ -26,35 +26,40 @@ document.addEventListener('DOMContentLoaded', (event) => {
      document.getElementById('searchField').addEventListener('input', readInput);
     });
 
- async function init() {
+async function init() {
     await renderStartPage();
-   
 }
 
-function readInput() {
+async function readInput() {
     inputField = document.getElementById('searchField').value; // 'searchField' sollte die ID des Eingabefelds sein
     inputField = inputField.toLowerCase(); // Umwandeln in Kleinbuchstaben
     filterPokemons(inputField);
 }
 
 async function filterPokemons(inputField) {
-    if (inputField.length <= 0 ) {
+    if (inputField.length === 0 ) {
         // Wenn das Eingabefeld leer ist, rendere die Startseite erneut
+        amount = 0;
+        startAmount = 0;
+        filteredPokemons=[];
         renderStartPage();
         return;
     }
-    
-    if (inputField.length < 3 ) {
-        return 
+    let isNumber = !isNaN(parseInt(inputField))
+    if (isNumber) {
+        let inputNumber = parseInt(inputField);
+        filteredPokemons = allPokemons.filter(pokemon => pokemon.id === inputNumber);
+    }else if (inputField.length >= 3 ) {
+        filteredPokemons = allPokemons.filter(pokemon  => pokemon.name.toLowerCase().includes(inputField));
          // Stoppt die Funktion, wenn der Eingabetext weniger als 3 Zeichen hat
     }else{
-    filteredPokemons = allPokemons.filter(pokemon => pokemon.name.toLowerCase().includes(inputField));
     // Alle Pokemons, die durch den Filter kommen, werden im Array gespeichert
-    amount = 0;
-    startAmount = 0;
-    document.getElementById('content').innerHTML = '';
-    renderMorePokemons({results: filteredPokemons}); // Hier die gefilterte Liste anzeigen
+        return; 
     }
+        amount = 0;
+        startAmount = 0;
+        document.getElementById('content').innerHTML = '';
+        renderMorePokemons({results: filteredPokemons}); // Hier die gefilterte Liste anzeigen
 }
 
 async function renderStartPage() {
@@ -64,25 +69,29 @@ async function renderStartPage() {
     content.innerHTML = '';
     await renderMorePokemons(pokemons);
     let button = document.getElementById('loadMoreButton');
-    if(button){
-        
-    }else{
-    await loadMoreButton(pokemons);
+    if(!button){
+        await loadMoreButton(pokemons);
     }
-    
 }
 
 async function renderMorePokemons(pokemons) {
+    let loadMoreButton = document.getElementById('loadMoreButton');
+    if (loadMoreButton) {
+        loadMoreButton.disabled = true; // Button deaktivieren
+    }
     let content = document.getElementById('content');
     amount = amount +10;
     for (let i = startAmount; i < amount; i++) {
+        if (i >= pokemons.results.length) break;
         let pokemon = await loadPokemon(pokemons.results[i].name);
         let name = capitalizeFirstLetter(pokemons.results[i].name); // for Capital letter
         content.innerHTML += renderStartPageHTML(name, i, pokemon);
     } 
-    
     addEventListeners(0, amount);
     startAmount = amount;
+    if (loadMoreButton) {
+        loadMoreButton.disabled = false; // Button wieder aktivieren
+    }
     
 }
 
@@ -134,14 +143,30 @@ async function openPokemoncard(i) {
     pokemonInfo.innerHTML = '';
     let name = capitalizeFirstLetter(filteredPokemons[i].name);
     pokemonInfo.innerHTML = openPokemoncardHTML(name, pokemon, i);
-    loadAbouts(i);
+    let swipeButtons = document.getElementById(`swipeButtons${i}`);
+    if(filteredPokemons.length != 151){
+        swipeButtons.classList.add('d-none');
+    }else{
+        swipeButtons.classList.remove('d-none');
+    }
+    if(name == "Pikachu"){
+      playSound(pokemon);  
+    }
+
+     loadAbouts(i);
+
+}
+
+function playSound(pokemon){
+    let audio = new Audio (`${pokemon.cries.latest}`);
+    audio.play();
 }
 
 function openPokemoncardHTML(name, pokemon, i) {
     return `
     <div class="infoCardTop ${pokemon.types[0].type.name}">
         <h2 class="infoCardName">${name}</h2>
-        <img class="infoCardImg" src="${pokemon.sprites.other['official-artwork'].front_default}">
+        <img class="infoCardImg" src="${pokemon.sprites.other['official-artwork']['front_default']}">
     </div>
     <div class="infoCardBottom" id="pokemonInfo">
         <div class="infoCardText">
@@ -150,13 +175,21 @@ function openPokemoncardHTML(name, pokemon, i) {
                 <b class="loadBasestate" onclick="loadBasestate(${i})" id="basestate">Basestate</b></div>
             <div id="infoContent" class="infoContent"></div>
         </div>
-        <div class="swipeButtons"><button id="cardBeforeButton" onclick="openCardBefore(${i})" class="${pokemon.types[0].type.name}"><b ><</b></button> <button onclick="openCardAfter(${i})" class="${pokemon.types[0].type.name}"><b>></b></button></div>
+        <div class="swipeButtons" id="swipeButtons${i}">
+            <button id="cardBeforeButton" onclick="openCardBefore(${i})" class="${pokemon.types[0].type.name}">
+                <b><</b>
+            </button> 
+            <button onclick="openCardAfter(${i})" class="${pokemon.types[0].type.name}">
+                <b>></b>
+            </button>
+        </div>
     </div>`;
+    
 }
 
 async function openCardBefore(i) {
-    let pokemons = {results: filteredPokemons}; ;
-    i = i - 1;
+    console.log(filteredPokemons);
+    i = filteredPokemons[0].id - 1;
     if (i < 0) {
         i = filteredPokemons.length - 1;
     }
@@ -196,7 +229,6 @@ function loadAboutsHTML(pokemon) {
 
 async function loadBasestate(i) {
     let pokemon = await loadPokemon(filteredPokemons[i].name);
-    console.log(pokemon);
     let content = document.getElementById('infoContent');
     content.innerHTML = '';
     let button = document.getElementById('about');
@@ -205,7 +237,6 @@ async function loadBasestate(i) {
     button.classList.remove('loadBorder');
     buttonBase.classList.add(`${pokemon.types[0].type.name}`);
     buttonBase.classList.add('loadBorder');
-    
     content.innerHTML = pokemonStats(pokemon);
 }
 
@@ -223,8 +254,14 @@ function closePokemonCard() {
 async function loadMainPokemonData() {
     let response = await fetch(startUrl);
     let responseToJson = await response.json();
-    allPokemons = responseToJson.results; // Hier die allPokemons Liste füllen
-    return responseToJson;
+    allPokemons = responseToJson.results.map((pokemon, index) => ({
+        name: pokemon.name,
+        url: pokemon.url,
+        id: index + 1 // Die ID wird hier basierend auf dem Index gesetzt, da die ersten 151 Pokémon geladen werden
+    }));
+    console.log(allPokemons);
+    return {results: allPokemons};
+    
 }
 
 async function loadPokemon(path) {
@@ -237,7 +274,6 @@ function pokemonType(pokemon) {
     let result = '';
     for (let i = 0; i < pokemon.types.length; i++) {
         result += `<div class="typeDiv ${pokemon.types[i].type.name}">${pokemon.types[i].type.name}</div>`;
-        // result += ` `;
     }
     return result;
 }
