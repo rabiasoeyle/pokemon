@@ -1,8 +1,11 @@
 .contentImpressum{
     padding:40px;
+    min-height: 90vh;
+    max-width:1820px;
 }
 .contentDsgvo{
     padding:40px;
+    max-width:1820px;
 }
 .quellen{
     background-color: white !important;

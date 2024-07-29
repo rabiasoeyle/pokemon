@@ -30,6 +30,9 @@ header{
     display:flex;
     gap:16px;
 }
+.imgHeader{
+    object-fit: contain;
+}
 .headerLeft:hover{
    cursor: pointer;
 }
@@ -52,7 +55,7 @@ header{
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding:16px;
+    padding:16px 0px;
 }
 .footerOfPage a{
     text-decoration: none;
@@ -149,7 +152,7 @@ header{
 .pokemonInfoCard{
     width:50vw;
     max-width:600px;
-    height:70vh; 
+    /* height:70vh;  */
     display:flex;
     justify-content: space-between;
     flex-direction: column;
@@ -349,7 +352,7 @@ h1{
     width:80vW;
 }
 .typeOnBigView div {
-    font-size: 18px;
+    font-size: 14px;
 }
 
 .fullWidth{
@@ -370,7 +373,12 @@ h1{
 }
 
 }
-@media(max-height:600px){
+@media(max-height:800px){
+    .pokemonInfoCard{
+        height:unset;
+    }
+}
+@media(max-height:650px){
     .pokemonInfoCard{
         flex-direction: row;
         width:80vW;
@@ -423,9 +431,6 @@ h1{
     }
     .content{
         margin:16px;
-    }
-    .pokemonInfoCard{
-        width:80vW;
     }
     .typeOnBigView div {
         font-size: 18px;

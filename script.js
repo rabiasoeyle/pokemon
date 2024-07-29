@@ -6,35 +6,23 @@ let allPokemons = [];
 let filteredPokemons = [];
 let inputField;
 
-//for loadingspinner
 window.addEventListener("load", ()=> {
         const loader = document.querySelector(".loader");
         loader.classList.add("loader-hidden");
         loader.addEventListener("transitionend", ()=>{
-            document.body.removeChild("loader");
-        })
-})
-    
+            document.body.removeChild(loader);
+})}) 
 document.addEventListener('DOMContentLoaded', (event) => {
     init();
-
-// Event Listener zum Schließen des Popups, wenn außerhalb des pokemonInfoCard geklickt wird
 document.getElementById('cardBackground').addEventListener('click', (event) => {
-    // Kontrolle, ob nicht auf die PokemoninfoCard geklickt wurde
     if (!document.getElementById('pokemonInfoCard').contains(event.target)) {
-         // Falls alles passt wird diese Aktion durchgeführt
-        closePokemonCard();
-    }
+        closePokemonCard();}
 });
-    // Event Listener zum Verhindern des Schließens, wenn innerhalb des pokemonInfoCard geklickt wird
 document.getElementById('pokemonInfoCard').addEventListener('click', (event) => {
-    event.stopPropagation(); // Verhindert das Weiterleiten des Click-Events
+    event.stopPropagation();
     });
-
-     // Event Listener für das Suchfeld
 document.getElementById('searchField').addEventListener('input', readInput);
 });
-
 
 async function init() {
     showLoader();
@@ -77,7 +65,6 @@ function inputAvailable(){
 }
 
 async function filterPokemons(inputField) {
-    let button = document.getElementById('loadMoreButton');
     if (inputField.length === 0 ) {
         noInput();
         return;
