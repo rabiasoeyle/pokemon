@@ -42,7 +42,6 @@ header{
     border-color:blue
 }
 .footerOfPage{
-    height:10vh;
     background-image: url("./img/pokeball2DesignDark.png");
     background-color: rgb(245, 96, 96) !important;
     background-blend-mode: screen;
@@ -53,6 +52,7 @@ header{
     align-items: center;
     justify-content: center;
     gap: 8px;
+    padding:16px;
 }
 .footerOfPage a{
     text-decoration: none;
@@ -64,7 +64,7 @@ header{
     text-align: center;
     min-width: 100%;
     min-height: 90vh;
-    background-color: rgb(16, 16, 15);
+    background-color: rgb(223, 228, 228);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -80,7 +80,6 @@ header{
     
 }
 .typeDiv{
-    /* box-shadow: 1px 2px 6px 4px rgba(0, 0, 255, .2); */
     border-radius: 24px;
     padding: 0px 8px;
     margin: 8px;
@@ -155,7 +154,6 @@ header{
     justify-content: space-between;
     flex-direction: column;
     border-radius: 24px;
-    /* border: solid 1px; */
     box-shadow: 1px 2px 6px 4px rgba(0, 0, 255, .2);
     background-color: white;
 }
@@ -181,7 +179,7 @@ header{
     flex-direction: column;
     gap: 8px;
     padding: 0px 16px 0px 16px; 
-    font-size: 24px;
+    font-size: 20px;
 }
 .loadInfoSpan{
     display: flex;
@@ -247,13 +245,13 @@ header{
      padding:16px;
      width:50%;
      border-radius: 24px;
-     font-size: 24px;
+     font-size: 20px;
 }
 .loadBasestate{
     padding:16px;
     width:50%;
     border-radius: 24px;
-    font-size: 24px;
+    font-size: 20px;
 }
 .loadBorder{
     background-color: rgb(233, 15, 7);
@@ -295,6 +293,9 @@ h1{
 }
 
 @media(max-width:772px){
+    .infoCardName{
+        font-size: 32px;
+    }
     .headerDiv{
         flex-direction: column;
         align-items: flex-start;
@@ -363,6 +364,9 @@ h1{
 }
 .h1{
     font-size: 30px !important;
+}
+.infoCardName{
+    font-size: 24px;
 }
 
 }

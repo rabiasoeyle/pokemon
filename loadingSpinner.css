@@ -10,7 +10,8 @@
     background-color: white;
     transition: opacity 0.75s ease, visbility 0.75s ease;
     background-image: url("./img/pokeball2DesignDark.png");
-    background-color: bisque;
+    background-color: rgb(235, 192, 140);
+    background-blend-mode: screen;
     background-size: cover;
     background-position: center;
     z-index:99;
