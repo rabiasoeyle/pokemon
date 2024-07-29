@@ -1,0 +1,17 @@
+.contentImpressum{
+    padding:40px;
+}
+.contentDsgvo{
+    padding:40px;
+}
+header{
+    text-align: center;
+}
+@media(max-width:500px){
+    .contentImpressum{
+        padding:12px;
+    }
+    .contentDsgvo{
+        padding:12px;
+    }
+}
