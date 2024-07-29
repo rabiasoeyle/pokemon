@@ -60,11 +60,13 @@ async function readInput() {
 }
 
 async function filterPokemons(inputField) {
-    if (inputField.length === 0 ) {
+     let button = document.getElementById('loadMoreButton');
+     if (inputField.length === 0 ) {
         // Wenn das Eingabefeld leer ist, rendere die Startseite erneut
         amount = 0;
         startAmount = 0;
         filteredPokemons=[];
+        button.classList.remove('d-none');
         renderStartPage();
         return;
     }
@@ -72,9 +74,11 @@ async function filterPokemons(inputField) {
     if (isNumber) {
         let inputNumber = parseInt(inputField);
         filteredPokemons = allPokemons.filter(pokemon => pokemon.id === inputNumber);
+        button.classList.add('d-none');
     }else if (inputField.length >= 3 ) {
         filteredPokemons = allPokemons.filter(pokemon  => pokemon.name.toLowerCase().includes(inputField));
          // Stoppt die Funktion, wenn der Eingabetext weniger als 3 Zeichen hat
+         button.classList.add('d-none');
     }else{
     // Alle Pokemons, die durch den Filter kommen, werden im Array gespeichert
         return; 
@@ -92,6 +96,12 @@ async function renderStartPage() {
     content.innerHTML = '';
     await renderMorePokemons(pokemons);
     let button = document.getElementById('loadMoreButton');
+    if(button && filteredPokemons.length != 151){
+        button.classList.add('d-none');
+    }
+    // else{
+    //     button.classList.remove('d-none');
+    // }
     if(!button){
         await loadMoreButton(pokemons);
     }
@@ -125,7 +135,7 @@ function renderStartPageHTML(name, i, pokemon) {
     <div class="pokemonCards ${pokemon.types[0].type.name}" id="pokemon-${i}">
         <div class="idAndName">
             <span class="idSpan">no.${pokemon.id}</span>
-            <h2 class="pokemonName">${name}</h2>
+            <h3 class="pokemonName">${name}</h3>
         </div>
         <div class="typeAndImg">
            <div class="allTypesDiv">${pokemonType(pokemon)} </div>
@@ -142,7 +152,6 @@ async function loadMoreButton(pokemons) {
     loadMoreButton.innerText = 'Load More';
     main.appendChild(loadMoreButton);
     loadMoreButton.addEventListener('click', () => renderMorePokemons(pokemons));
-    
 }
 
 // Adds an event listener to every card
@@ -151,7 +160,6 @@ function addEventListeners(start, end) {
         let card = document.getElementById(`pokemon-${i}`);
         if (card) {
             card.addEventListener("click", () => {
-                console.log(`Pokemon ${i} clicked`);
                 openPokemoncard(i);
             });
         }
@@ -173,6 +181,7 @@ async function openPokemoncard(i) {
         swipeButtons.classList.add('d-none');
     }else{
         swipeButtons.classList.remove('d-none');
+
     }
     if(name == "Pikachu"){
       playSound(pokemon);  
@@ -194,10 +203,12 @@ function openPokemoncardHTML(name, pokemon, i) {
         <img class="infoCardImg" src="${pokemon.sprites.other['official-artwork']['front_default']}">
     </div>
     <div class="infoCardBottom" id="pokemonInfo">
-        <div class="infoCardText">
-            <div class="infoCardLinks" id="infoCardLinks"> 
+        <div class="infoCardLinks" id="infoCardLinks"> 
                 <b class="loadAbouts" onclick="loadAbouts(${i})" id="about">About</b>  
-                <b class="loadBasestate" onclick="loadBasestate(${i})" id="basestate">Basestate</b></div>
+                <b class="loadBasestate" onclick="loadBasestate(${i})" id="basestate">Basestate</b>
+        </div>
+        <div class="infoCardText">
+            
             <div id="infoContent" class="infoContent"></div>
         </div>
         <div class="swipeButtons" id="swipeButtons${i}">
@@ -213,8 +224,7 @@ function openPokemoncardHTML(name, pokemon, i) {
 }
 
 async function openCardBefore(i) {
-    console.log(filteredPokemons);
-    i = filteredPokemons[0].id - 1;
+    i =  i - 1;
     if (i < 0) {
         i = filteredPokemons.length - 1;
     }
@@ -222,7 +232,6 @@ async function openCardBefore(i) {
 }
 
 async function openCardAfter(i) {
-    let pokemons = {results: filteredPokemons}; ;
     i = i + 1;
     if (i >= filteredPokemons.length) {
         i = 0;
@@ -284,7 +293,6 @@ async function loadMainPokemonData() {
         url: pokemon.url,
         id: index + 1 // Die ID wird hier basierend auf dem Index gesetzt, da die ersten 151 Pokémon geladen werden
     }));
-    console.log(allPokemons);
     return {results: allPokemons};
     
 }
@@ -314,6 +322,7 @@ function pokemonStats(pokemon) {
     return result;
 }
 
+//wird ausgeführt nachdem man auf loadBasestate klickt
 function pokemonStatsHTML(statName, pokemon, i, baseStat) {
     return `
         <span class="statSpan">

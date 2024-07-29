@@ -1,9 +1,4 @@
 .loader {
-    /* border: 16px solid #f3f3f3; /* Light grey */
-    /* border-top: 16px solid #3498db; /* Blue */
-    /* border-radius: 50%;
-    width: 120px;
-    height: 120px;*/ 
     position: fixed;
     top:0;
     left:0;
@@ -14,8 +9,10 @@
     align-items: center;
     background-color: white;
     transition: opacity 0.75s ease, visbility 0.75s ease;
-    background-image: url("./img/pokemonOriginal.png");
+    background-image: url("./img/pokeball2DesignDark.png");
+    background-color: bisque;
     background-size: cover;
+    background-position: center;
     z-index:99;
   }
   .loader-hidden{
@@ -29,7 +26,6 @@
     border:15px solid white;
     border-top-color:rgb(14, 39, 228) ;
     border-radius: 50%;
-    /* animation: loading 0.5s ease infinite; */
     animation: loading 1s linear infinite; 
     background-color:yellow;
 
